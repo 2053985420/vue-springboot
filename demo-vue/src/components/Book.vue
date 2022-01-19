@@ -8,10 +8,10 @@
     <div class="div1">
       <el-input
         v-model="input"
-        placeholder="Please input"
+        placeholder="精确搜索书名"
         style="margin-right: 5px; width: 25%"
       />
-      <el-button type="primary" @click="load()">查询</el-button>
+      <el-button type="primary" @click="search()">查询</el-button>
     </div>
     <div class="duing">
       <el-table :data="tableData" border style="width: 100%">
@@ -149,14 +149,31 @@ export default {
       this.form = {};
       this.dialogVisible = true;
     },
-
+    search(){
+      request
+        .get("/book/getone", {
+          params: {
+            key: this.input
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          if(res.data==null){
+            this.tableData=null
+            this.total = 0;
+          }else{
+            this.tableData = [res.data];
+            this.total = 1;
+          }
+          this.pageNum=1;
+        });
+    },
     load() {
       request
         .get("/book", {
           params: {
             pageNum: this.pageNum,
-            pageSize: this.pageSize,
-            search: this.input,
+            pageSize: this.pageSize
           },
         })
         .then((res) => {

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMappper, User> implements UserService {
     @Autowired UserMappper userMappper;
@@ -18,12 +20,18 @@ public class UserServiceImpl extends ServiceImpl<UserMappper, User> implements U
     RedisTemplate redisTemplate;
     public Page<User> selectUserPage(Integer pageNum,Integer pageSize, String search) {
 //        if(search!=null&&!search.equals("")){
-//            String key = "user:"+
+//            String key = search+'-'+pageNum+'-'+pageSize;
+//            List<User> value= (List<User>) redisTemplate.opsForValue().get(key);
+//            if(value!=null){
+//            }
 //        }
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
         if(search!=null&&!search.equals("")){
             wrapper.like(User::getNickName,search);
         }
-        return userMappper.selectPage(new Page<>(pageNum,pageSize),wrapper);
+        Page<User> page=userMappper.selectPage(new Page<>(pageNum,pageSize),wrapper);
+//        if()
+////        redisTemplate.opsForValue().set(search,page.getRecords());
+        return page;
     }
 }

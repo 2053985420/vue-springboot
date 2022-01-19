@@ -22,18 +22,22 @@ public class BookController {
     }
     @PutMapping//更新
     public Result update(@RequestBody Book book){
-        bookService.updateById(book);
+        bookService.updateBook(book);
         return Result.success();
     }
     @DeleteMapping("/{id}")//更新
     public Result delete(@PathVariable Long id){
-        bookService.removeById(id);
+        bookService.deleteBook(id);
         return Result.success();
     }
     @GetMapping//查询
     public Result findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                           @RequestParam(defaultValue = "10") Integer pageSize,
-                           @RequestParam(defaultValue = "") String search){
-        return Result.success(bookService.selectBookPage(pageNum,pageSize,search));
+                           @RequestParam(defaultValue = "10") Integer pageSize){
+        return Result.success(bookService.selectBookPage(pageNum,pageSize));
+    }
+    @GetMapping("/getone")
+    public Result getOne(@RequestParam(defaultValue = "") String key){
+        System.out.println("aaa");
+        return Result.success(bookService.getOneBook(key));
     }
 }
